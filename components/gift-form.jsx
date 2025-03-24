@@ -19,7 +19,9 @@ export function GiftForm({ onSubmit, onCancel, initialData, recipients, occasion
   })
 
   const [newRecipient, setNewRecipient] = useState("")
-  const [newOccasion, setNewOccasion] = useState("")
+  const [localOccasions, setLocalOccasions] = useState(occasions)
+const [newOccasion, setNewOccasion] = useState("")
+  
   const [errors, setErrors] = useState({})
 
   const handleChange = (e) => {
@@ -88,11 +90,16 @@ export function GiftForm({ onSubmit, onCancel, initialData, recipients, occasion
   };
 
   const handleAddOccasion = () => {
-    if (newOccasion.trim() && !occasions.includes(newOccasion.trim())) {
-      setFormData({
-        ...formData,
+    if (newOccasion.trim() && !localOccasions.includes(newOccasion.trim())) {
+      const updatedOccasions = [...localOccasions, newOccasion.trim()]
+      setLocalOccasions(updatedOccasions)
+  
+      // Update form data to select the new occasion
+      setFormData((prev) => ({
+        ...prev,
         occasion: newOccasion.trim(),
-      })
+      }))
+  
       setNewOccasion("")
     }
   }
@@ -155,22 +162,26 @@ export function GiftForm({ onSubmit, onCancel, initialData, recipients, occasion
         <div className="space-y-2">
           <Label htmlFor="occasion">Occasion</Label>
           <div className="flex gap-2">
-            <select
-              id="occasion"
-              name="occasion"
-              value={formData.occasion}
-              onChange={handleChange}
-              className={`flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${errors.occasion ? "border-red-500" : ""
-                }`}
-            >
-              <option value="">Select occasion</option>
-              {occasions.map((occasion) => (
-                <option key={occasion} value={occasion}>
-                  {occasion}
-                </option>
-              ))}
-              <option value="__new__">+ Add new occasion</option>
-            </select>
+          <select
+  id="occasion"
+  name="occasion"
+  value={formData.occasion}
+  onChange={handleChange}
+  className={`flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm 
+    ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium 
+    placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 
+    focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed 
+    disabled:opacity-50 ${errors.occasion ? "border-red-500" : ""}`}
+>
+  <option value="">Select occasion</option>
+  
+{localOccasions.map((occasion) => (
+  <option key={occasion} value={occasion}>
+    {occasion}
+  </option>
+))}
+<option value="__new__">+ Add new occasion</option> {/* NEW OPTION ADDED */}
+</select>
           </div>
           {formData.occasion === "__new__" && (
             <div className="flex gap-2 mt-2">
