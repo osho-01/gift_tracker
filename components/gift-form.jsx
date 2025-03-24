@@ -25,20 +25,21 @@ const [newOccasion, setNewOccasion] = useState("")
   const [errors, setErrors] = useState({})
 
   const handleChange = (e) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
+  
     setFormData({
       ...formData,
-      [name]: name === "price" ? Number.parseFloat(value) || 0 : value,
-    })
-
+      [name]: name === "price" && value === "" ? "" : Number.parseFloat(value) || value,
+    });
+  
     // Clear error when field is edited
     if (errors[name]) {
       setErrors({
         ...errors,
         [name]: "",
-      })
+      });
     }
-  }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -207,16 +208,16 @@ const [newOccasion, setNewOccasion] = useState("")
         <div className="space-y-2">
           <Label htmlFor="price">Price</Label>
           <Input
-            id="price"
-            name="price"
-            type="number"
-            step="0.01"
-            min="0"
-            value={formData.price}
-            onChange={handleChange}
-            placeholder="0.00"
-            className={errors.price ? "border-red-500" : ""}
-          />
+  id="price"
+  name="price"
+  type="number"
+  step="0.01"
+  min="0"
+  value={formData.price === 0 ? "" : formData.price} // Allow clearing
+  onChange={handleChange}
+  placeholder="0.00"
+  className={errors.price ? "border-red-500" : ""}
+/>
           {errors.price && <p className="text-red-500 text-sm">{errors.price}</p>}
         </div>
 
