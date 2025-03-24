@@ -31,7 +31,7 @@ export function GiftList({ gifts, onEdit, onDelete, onTogglePurchased }) {
             <th className="text-left p-2 hidden md:table-cell">Occasion</th>
             <th className="text-left p-2 hidden md:table-cell">Date</th>
             <th className="text-right p-2">Price</th>
-            <th className="text-center p-2">Status</th>
+            <th className="text-center p-2">Purchase status</th>
             <th className="text-right p-2">Actions</th>
           </tr>
         </thead>

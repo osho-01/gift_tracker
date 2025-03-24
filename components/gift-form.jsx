@@ -71,16 +71,21 @@ export function GiftForm({ onSubmit, onCancel, initialData, recipients, occasion
 
     onSubmit(formData)
   }
+  const [localRecipients, setLocalRecipients] = useState(recipients);
 
   const handleAddRecipient = () => {
-    if (newRecipient.trim() && !recipients.includes(newRecipient.trim())) {
-      setFormData({
-        ...formData,
+    if (newRecipient.trim() && !localRecipients.includes(newRecipient.trim())) {
+      setLocalRecipients([...localRecipients, newRecipient.trim()]);
+
+      // Update form data
+      setFormData((prev) => ({
+        ...prev,
         recipient: newRecipient.trim(),
-      })
-      setNewRecipient("")
+      }));
+
+      setNewRecipient("");
     }
-  }
+  };
 
   const handleAddOccasion = () => {
     if (newOccasion.trim() && !occasions.includes(newOccasion.trim())) {
@@ -118,12 +123,9 @@ export function GiftForm({ onSubmit, onCancel, initialData, recipients, occasion
               name="recipient"
               value={formData.recipient}
               onChange={handleChange}
-              className={`flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${
-                errors.recipient ? "border-red-500" : ""
-              }`}
             >
               <option value="">Select recipient</option>
-              {recipients.map((recipient) => (
+              {localRecipients.map((recipient) => (
                 <option key={recipient} value={recipient}>
                   {recipient}
                 </option>
@@ -158,9 +160,8 @@ export function GiftForm({ onSubmit, onCancel, initialData, recipients, occasion
               name="occasion"
               value={formData.occasion}
               onChange={handleChange}
-              className={`flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${
-                errors.occasion ? "border-red-500" : ""
-              }`}
+              className={`flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${errors.occasion ? "border-red-500" : ""
+                }`}
             >
               <option value="">Select occasion</option>
               {occasions.map((occasion) => (
