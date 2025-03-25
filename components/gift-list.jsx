@@ -1,16 +1,28 @@
 "use client"
 
+import { useState } from "react"
 import { formatCurrency } from "@/lib/utils"
 import { Check, Edit, Trash2, X } from "lucide-react"
 
 export function GiftList({ gifts, onEdit, onDelete, onTogglePurchased }) {
-  // Function to calculate days until the occasion
+  const [showToast, setShowToast] = useState(false)
+
   const getDaysUntil = (dateString) => {
     const today = new Date()
     const occasionDate = new Date(dateString)
     const diffTime = occasionDate.getTime() - today.getTime()
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
     return diffDays
+  }
+
+  const handleDelete = (id) => {
+    onDelete(id)
+    setShowToast(true)
+
+    // Hide toast after 3 seconds
+    setTimeout(() => {
+      setShowToast(false)
+    }, 3000)
   }
 
   if (gifts.length === 0) {
@@ -22,7 +34,13 @@ export function GiftList({ gifts, onEdit, onDelete, onTogglePurchased }) {
   }
 
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto relative">
+      {showToast && (
+        <div className="fixed top-4 right-4 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg flex items-center">
+          <Check className="w-5 h-5 mr-2" /> Gift deleted successfully!
+        </div>
+      )}
+
       <table className="w-full border-collapse">
         <thead>
           <tr className="border-b">
@@ -84,7 +102,7 @@ export function GiftList({ gifts, onEdit, onDelete, onTogglePurchased }) {
                       <Edit size={16} />
                     </button>
                     <button
-                      onClick={() => onDelete(gift.id)}
+                      onClick={() => handleDelete(gift.id)}
                       className="p-1 text-muted-foreground hover:text-red-500"
                       aria-label="Delete gift"
                     >
@@ -100,4 +118,3 @@ export function GiftList({ gifts, onEdit, onDelete, onTogglePurchased }) {
     </div>
   )
 }
-
