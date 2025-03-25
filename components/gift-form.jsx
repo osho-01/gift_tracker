@@ -27,19 +27,20 @@ const [newOccasion, setNewOccasion] = useState("")
   const handleChange = (e) => {
     const { name, value } = e.target;
   
-    setFormData({
-      ...formData,
-      [name]: name === "price" && value === "" ? "" : Number.parseFloat(value) || value,
-    });
+    setFormData((prev) => ({
+      ...prev,
+      [name]: name === "price" ? (value === "" ? "" : Number.parseFloat(value)) : value,
+    }));
   
     // Clear error when field is edited
     if (errors[name]) {
-      setErrors({
-        ...errors,
+      setErrors((prevErrors) => ({
+        ...prevErrors,
         [name]: "",
-      });
+      }));
     }
   };
+  
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -224,13 +225,18 @@ const [newOccasion, setNewOccasion] = useState("")
         <div className="space-y-2">
           <Label htmlFor="date">Date</Label>
           <Input
-            id="date"
-            name="date"
-            type="date"
-            value={formData.date}
-            onChange={handleChange}
-            className={errors.date ? "border-red-500" : ""}
-          />
+  id="date"
+  name="date"
+  type="date"
+  value={formData.date} // Ensure the date is in "YYYY-MM-DD" format
+  onChange={(e) =>
+    setFormData((prev) => ({
+      ...prev,
+      date: e.target.value, // Store as string "YYYY-MM-DD"
+    }))
+  }
+  className={errors.date ? "border-red-500" : ""}
+/>
           {errors.date && <p className="text-red-500 text-sm">{errors.date}</p>}
         </div>
       </div>
